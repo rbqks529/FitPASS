@@ -3,6 +3,7 @@ package com.example.myapplication
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import com.example.myapplication.Chat.ChatFragment
 import com.example.myapplication.Home.HomeFragment
 import com.example.myapplication.databinding.ActivityMainBinding
 

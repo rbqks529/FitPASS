@@ -19,5 +19,4 @@ class NearFragment : Fragment() {
 
         return binding.root
     }
-
 }
