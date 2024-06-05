@@ -51,7 +51,6 @@ class PostDetailFragment : Fragment() {
             val intent = Intent(requireContext(), ChattingActivity::class.java)
             intent.putExtra("token", token)
             intent.putExtra("USERNAME", binding.tvPostDetailUsername.text.toString())
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
         }
 
