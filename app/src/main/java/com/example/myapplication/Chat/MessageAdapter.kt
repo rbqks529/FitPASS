@@ -1,3 +1,4 @@
+// MessageAdapter.kt
 package com.example.myapplication.Chat
 
 import android.content.Context
@@ -8,7 +9,11 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import com.example.myapplication.R
 
-class MessageAdapter(private val context: Context, private val messages: List<Message>, private val currentUserName: String) : ArrayAdapter<Message>(context, 0, messages) {
+class MessageAdapter(
+    private val context: Context,
+    private val messages: List<Message>,
+    private val currentUserName: String
+) : ArrayAdapter<Message>(context, 0, messages) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val message = getItem(position)

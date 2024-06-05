@@ -23,6 +23,7 @@ class ChattingActivity : AppCompatActivity() {
     private lateinit var messageAdapter: MessageAdapter
     private lateinit var token: String
     private lateinit var username: String
+    private lateinit var chatRoomRef: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,15 +31,15 @@ class ChattingActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         token = intent.getStringExtra("token") ?: ""
+        username = intent.getStringExtra("username") ?: ""
 
-        // Firebase Auth instance
+        chatRoomRef = FirebaseDatabase.getInstance().getReference("ChatRooms").child(token)
+
         val auth = FirebaseAuth.getInstance()
         val currentUser = auth.currentUser
 
         if (currentUser != null) {
             val uid = currentUser.uid
-
-            // Firebase Database reference
             val database = FirebaseDatabase.getInstance().getReference("UserAccount").child(uid)
 
             database.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -46,11 +47,13 @@ class ChattingActivity : AppCompatActivity() {
                     username = dataSnapshot.child("nickName").value.toString()
                     Log.d(TAG, "username: $username")
 
-
                     messageAdapter = MessageAdapter(this@ChattingActivity, messageList, username)
                     binding.messageListView.adapter = messageAdapter
 
-                    // Connect to socket after getting username
+                    addUserToChatRoom(uid)
+                    setupMessageListener()
+                    loadChatHistory()
+
                     try {
                         socket = IO.socket("http://218.38.190.81:10001")
                         socket.connect()
@@ -89,6 +92,13 @@ class ChattingActivity : AppCompatActivity() {
                                 val sender = data.getString("username")
                                 messageList.add(Message(message, sender))
                                 messageAdapter.notifyDataSetChanged()
+
+                                val chatMessage = ChatMessage(message, sender, System.currentTimeMillis())
+                                chatRoomRef.child("messages").push().setValue(chatMessage)
+
+                                // 마지막 메시지 및 시간 업데이트
+                                chatRoomRef.child("lastMessage").setValue(message)
+                                chatRoomRef.child("lastMessageTime").setValue(System.currentTimeMillis())
                             } catch (e: JSONException) {
                                 e.printStackTrace()
                             }
@@ -116,12 +126,59 @@ class ChattingActivity : AppCompatActivity() {
                     messageObject.put("message", message)
                     messageObject.put("username", username)
                     socket.emit("message", messageObject)
+
+                    binding.messageEditText.setText("")
                 } catch (e: JSONException) {
                     e.printStackTrace()
                 }
-                binding.messageEditText.setText("")
             }
         }
+    }
+
+    private fun addUserToChatRoom(uid: String) {
+        chatRoomRef.child("participants").child(uid).setValue(true).addOnCompleteListener {
+            if (it.isSuccessful) {
+                Log.d(TAG, "User added to chat room")
+            } else {
+                Log.e(TAG, "Failed to add user to chat room")
+            }
+        }
+    }
+
+    private fun setupMessageListener() {
+        chatRoomRef.child("messages").addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                messageList.clear()
+                for (messageSnapshot in snapshot.children) {
+                    val message = messageSnapshot.child("message").value.toString()
+                    val sender = messageSnapshot.child("sender").value.toString()
+                    messageList.add(Message(message, sender))
+                }
+                messageAdapter.notifyDataSetChanged()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e(TAG, "Failed to load chat messages", error.toException())
+            }
+        })
+    }
+
+    private fun loadChatHistory() {
+        chatRoomRef.child("messages").addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                messageList.clear()
+                for (messageSnapshot in snapshot.children) {
+                    val message = messageSnapshot.child("message").value.toString()
+                    val sender = messageSnapshot.child("sender").value.toString()
+                    messageList.add(Message(message, sender))
+                }
+                messageAdapter.notifyDataSetChanged()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e(TAG, "Failed to load chat history", error.toException())
+            }
+        })
     }
 
     override fun onDestroy() {
@@ -133,3 +190,11 @@ class ChattingActivity : AppCompatActivity() {
         private const val TAG = "ChatActivity"
     }
 }
+
+data class ChatMessage(
+    val message: String,
+    val sender: String,
+    val timestamp: Long
+)
+
+// MessageAdapter.kt 파일은 수정 필요 없음
