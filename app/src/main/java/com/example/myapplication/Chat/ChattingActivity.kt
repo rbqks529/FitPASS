@@ -2,7 +2,6 @@ package com.example.myapplication.Chat
 
 import android.os.Bundle
 import android.util.Log
-import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import com.example.myapplication.databinding.ActivityChattingBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -14,12 +13,14 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.net.URISyntaxException
 
+data class Message(val content: String, val sender: String)
+
 class ChattingActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityChattingBinding
     private lateinit var socket: Socket
-    private lateinit var messageAdapter: ArrayAdapter<String>
-    private val messageList = mutableListOf<String>()
+    private val messageList = mutableListOf<Message>()
+    private lateinit var messageAdapter: MessageAdapter
     private lateinit var token: String
     private lateinit var username: String
 
@@ -27,9 +28,6 @@ class ChattingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityChattingBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        messageAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, messageList)
-        binding.messageListView.adapter = messageAdapter
 
         token = intent.getStringExtra("token") ?: ""
 
@@ -47,6 +45,10 @@ class ChattingActivity : AppCompatActivity() {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     username = dataSnapshot.child("nickName").value.toString()
                     Log.d(TAG, "username: $username")
+
+
+                    messageAdapter = MessageAdapter(this@ChattingActivity, messageList, username)
+                    binding.messageListView.adapter = messageAdapter
 
                     // Connect to socket after getting username
                     try {
@@ -70,7 +72,7 @@ class ChattingActivity : AppCompatActivity() {
                                     val messageData = data.getJSONObject(i)
                                     val message = messageData.getString("message")
                                     val sender = messageData.getString("username")
-                                    messageList.add("$sender: $message")
+                                    messageList.add(Message(message, sender))
                                 }
                                 messageAdapter.notifyDataSetChanged()
                             } catch (e: JSONException) {
@@ -85,7 +87,7 @@ class ChattingActivity : AppCompatActivity() {
                             try {
                                 val message = data.getString("message")
                                 val sender = data.getString("username")
-                                messageList.add("$sender: $message")
+                                messageList.add(Message(message, sender))
                                 messageAdapter.notifyDataSetChanged()
                             } catch (e: JSONException) {
                                 e.printStackTrace()
