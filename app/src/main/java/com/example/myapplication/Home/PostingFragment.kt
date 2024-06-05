@@ -14,7 +14,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 
 
-class PostFragment : Fragment() {
+class PostingFragment : Fragment() {
 
     private lateinit var binding: FragmentPostBinding
     private lateinit var database: FirebaseDatabase
@@ -96,6 +96,8 @@ class PostFragment : Fragment() {
                         .addOnFailureListener { exception ->
                             // Handle failure
                         }
+
+                    requireActivity().supportFragmentManager.popBackStack()
                 } else {
                     // Handle failure
                 }

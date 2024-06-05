@@ -63,7 +63,7 @@ class HomeFragment : Fragment() {
         }
 
         binding.btnGet.setOnClickListener {
-            val postFragment = PostFragment()
+            val postFragment = PostingFragment()
             requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.main_frm, postFragment)
                 .addToBackStack(null)
