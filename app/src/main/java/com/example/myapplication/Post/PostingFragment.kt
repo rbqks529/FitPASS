@@ -9,7 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.myapplication.Home.HomePostData
-import com.example.myapplication.databinding.FragmentPostBinding
+import com.example.myapplication.databinding.FragmentPostingBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -18,7 +18,7 @@ import com.google.firebase.storage.FirebaseStorage
 
 class PostingFragment : Fragment() {
 
-    private lateinit var binding: FragmentPostBinding
+    private lateinit var binding: FragmentPostingBinding
     private lateinit var database: FirebaseDatabase
     private lateinit var databaseReference: DatabaseReference
 
@@ -29,7 +29,7 @@ class PostingFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentPostBinding.inflate(inflater, container, false)
+        binding = FragmentPostingBinding.inflate(inflater, container, false)
 
         database = FirebaseDatabase.getInstance()
         databaseReference = database.reference.child("Post")
@@ -67,6 +67,7 @@ class PostingFragment : Fragment() {
         val originalPrice = binding.etPostOriginalPrice.text.toString().trim()
         val postTime = System.currentTimeMillis() / 1000 // Get current time in seconds
         val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: "" // 현재 사용자 ID 가져오기
+        val postContent = binding.etPostContent.text.toString().trim()
 
         if (selectedImageUri != null && placeName.isNotEmpty() && address.isNotEmpty() && price.isNotEmpty() && originalPrice.isNotEmpty()) {
             val postKey = databaseReference.push().key ?: return
@@ -84,7 +85,7 @@ class PostingFragment : Fragment() {
             }?.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val imageUrl = task.result.toString()
-                    val post = HomePostData(imageUrl, placeName, address, postTime.toLong(), restTime, price, originalPrice, currentUserId)
+                    val post = HomePostData(imageUrl, placeName, address, postTime.toLong(), restTime, price, originalPrice, currentUserId, postContent)
                     databaseReference.child(postKey).setValue(post)
                         .addOnSuccessListener {
                             // Clear input fields and reset the view
@@ -94,6 +95,7 @@ class PostingFragment : Fragment() {
                             binding.etPostPrice.setText("")
                             binding.etPostOriginalPrice.setText("")
                             binding.ivPostImage.setImageDrawable(null)
+                            binding.etPostContent.setText("")
                             selectedImageUri = null
                         }
                         .addOnFailureListener { exception ->

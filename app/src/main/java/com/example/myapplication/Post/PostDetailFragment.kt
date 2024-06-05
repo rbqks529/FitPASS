@@ -44,14 +44,16 @@ class PostDetailFragment : Fragment() {
             requireActivity().supportFragmentManager.popBackStack()
         }
 
+        loadPostDetails()
+        loadUserDetails()
+
         binding.ivChattingButton.setOnClickListener {
             val intent = Intent(requireContext(), ChattingActivity::class.java)
+            intent.putExtra("token", token)
+            intent.putExtra("USERNAME", binding.tvPostDetailUsername.text.toString())
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
         }
-
-        loadPostDetails()
-        loadUserDetails()
 
         return binding.root
     }
@@ -65,6 +67,7 @@ class PostDetailFragment : Fragment() {
         binding.tvPostDetailAddress.text = post.post_address
         binding.tvPostDetailPrice.text = post.post_price
         binding.tvPostDetailTime.text = getTimeDifferenceString(post.post_time)
+        binding.tvPostDetailContent.text = post.post_content // 게시글 내용 표시
     }
 
     private fun loadUserDetails() {

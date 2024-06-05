@@ -1,21 +1,106 @@
 package com.example.myapplication.Chat
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
+import android.util.Log
+import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.example.myapplication.R
+import com.example.myapplication.databinding.ActivityChattingBinding
+import io.socket.client.IO
+import io.socket.client.Socket
+import org.json.JSONArray
+import org.json.JSONException
+import org.json.JSONObject
+import java.net.URISyntaxException
 
 class ChattingActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityChattingBinding
+    private lateinit var socket: Socket
+    private lateinit var messageAdapter: ArrayAdapter<String>
+    private val messageList = mutableListOf<String>()
+    private lateinit var token: String
+    private lateinit var username: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_chatting)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+        binding = ActivityChattingBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        messageAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, messageList)
+        binding.messageListView.adapter = messageAdapter
+
+        token = intent.getStringExtra("token") ?: ""
+        username = intent.getStringExtra("USERNAME") ?: ""
+
+        Log.d(TAG, "token: $token")
+        Log.d(TAG, "username: $username")
+
+        try {
+            socket = IO.socket("http://218.38.190.81:10001")
+            socket.connect()
+            socket.emit("joinRoom", JSONObject().put("roomId", token).put("username", username))
+        } catch (e: URISyntaxException) {
+            e.printStackTrace()
+        } catch (e: JSONException) {
+            e.printStackTrace()
         }
+
+        socket.off("message")
+        socket.off("chatHistory")
+
+        socket.on("chatHistory") { args ->
+            runOnUiThread {
+                val data = args[0] as JSONArray
+                try {
+                    for (i in 0 until data.length()) {
+                        val messageData = data.getJSONObject(i)
+                        val message = messageData.getString("message")
+                        val sender = messageData.getString("username")
+                        messageList.add("$sender: $message")
+                    }
+                    messageAdapter.notifyDataSetChanged()
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                }
+            }
+        }
+
+        socket.on("message") { args ->
+            runOnUiThread {
+                val data = args[0] as JSONObject
+                try {
+                    val message = data.getString("message")
+                    val sender = data.getString("username")
+                    messageList.add("$sender: $message")
+                    messageAdapter.notifyDataSetChanged()
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                }
+            }
+        }
+
+        binding.sendButton.setOnClickListener {
+            val message = binding.messageEditText.text.toString()
+            if (message.isNotEmpty()) {
+                try {
+                    val messageObject = JSONObject()
+                    messageObject.put("message", message)
+                    messageObject.put("username", username)
+                    socket.emit("message", messageObject)
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                }
+                binding.messageEditText.setText("")
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        socket.disconnect()
+    }
+
+    companion object {
+        private const val TAG = "ChatActivity"
     }
 }

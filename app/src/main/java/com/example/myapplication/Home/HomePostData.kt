@@ -1,5 +1,6 @@
 package com.example.myapplication.Home
 
+import android.service.autofill.UserData
 import java.io.Serializable
 
 data class HomePostData(
@@ -10,6 +11,7 @@ data class HomePostData(
     val post_rest_time: Int = 0,
     val post_price: String = "",
     val post_original_price: String = "",
-    val userId: String = "" // 사용자 ID 추가
+    val userId: String = "",
+    val post_content: String = "" // 게시글 내용 필드 추가
 ) : Serializable
 

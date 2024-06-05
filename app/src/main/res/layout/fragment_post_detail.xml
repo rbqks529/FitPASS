@@ -95,6 +95,18 @@
         android:textColor="#8C8C8C"
         android:text="1일 전"/>
 
+    <TextView
+        android:id="@+id/tv_post_detail_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="14dp"
+        android:text="2024년 1월 27일 계약을 하였구요,3년에 100만원인 회원권이지만, 거리가 멀어져서 양도하기로 하였습니다."
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        app:layout_constraintTop_toBottomOf="@+id/tvPostDetailPlaceName"
+        android:textColor="@color/black"
+        android:layout_marginTop="16dp" />
+
 
     <TextView
         android:id="@+id/tvPostDetailPrice"
