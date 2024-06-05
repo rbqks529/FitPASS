@@ -5,6 +5,8 @@ import android.util.Log
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import com.example.myapplication.databinding.ActivityChattingBinding
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
 import io.socket.client.IO
 import io.socket.client.Socket
 import org.json.JSONArray
@@ -30,53 +32,78 @@ class ChattingActivity : AppCompatActivity() {
         binding.messageListView.adapter = messageAdapter
 
         token = intent.getStringExtra("token") ?: ""
-        username = intent.getStringExtra("USERNAME") ?: ""
 
-        Log.d(TAG, "token: $token")
-        Log.d(TAG, "username: $username")
+        // Firebase Auth instance
+        val auth = FirebaseAuth.getInstance()
+        val currentUser = auth.currentUser
 
-        try {
-            socket = IO.socket("http://218.38.190.81:10001")
-            socket.connect()
-            socket.emit("joinRoom", JSONObject().put("roomId", token).put("username", username))
-        } catch (e: URISyntaxException) {
-            e.printStackTrace()
-        } catch (e: JSONException) {
-            e.printStackTrace()
-        }
+        if (currentUser != null) {
+            val uid = currentUser.uid
 
-        socket.off("message")
-        socket.off("chatHistory")
+            // Firebase Database reference
+            val database = FirebaseDatabase.getInstance().getReference("UserAccount").child(uid)
 
-        socket.on("chatHistory") { args ->
-            runOnUiThread {
-                val data = args[0] as JSONArray
-                try {
-                    for (i in 0 until data.length()) {
-                        val messageData = data.getJSONObject(i)
-                        val message = messageData.getString("message")
-                        val sender = messageData.getString("username")
-                        messageList.add("$sender: $message")
+            database.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    username = dataSnapshot.child("nickName").value.toString()
+                    Log.d(TAG, "username: $username")
+
+                    // Connect to socket after getting username
+                    try {
+                        socket = IO.socket("http://218.38.190.81:10001")
+                        socket.connect()
+                        socket.emit("joinRoom", JSONObject().put("roomId", token).put("username", username))
+                    } catch (e: URISyntaxException) {
+                        e.printStackTrace()
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
                     }
-                    messageAdapter.notifyDataSetChanged()
-                } catch (e: JSONException) {
-                    e.printStackTrace()
+
+                    socket.off("message")
+                    socket.off("chatHistory")
+
+                    socket.on("chatHistory") { args ->
+                        runOnUiThread {
+                            val data = args[0] as JSONArray
+                            try {
+                                for (i in 0 until data.length()) {
+                                    val messageData = data.getJSONObject(i)
+                                    val message = messageData.getString("message")
+                                    val sender = messageData.getString("username")
+                                    messageList.add("$sender: $message")
+                                }
+                                messageAdapter.notifyDataSetChanged()
+                            } catch (e: JSONException) {
+                                e.printStackTrace()
+                            }
+                        }
+                    }
+
+                    socket.on("message") { args ->
+                        runOnUiThread {
+                            val data = args[0] as JSONObject
+                            try {
+                                val message = data.getString("message")
+                                val sender = data.getString("username")
+                                messageList.add("$sender: $message")
+                                messageAdapter.notifyDataSetChanged()
+                            } catch (e: JSONException) {
+                                e.printStackTrace()
+                            }
+                        }
+                    }
                 }
-            }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    Log.w(TAG, "loadUser:onCancelled", databaseError.toException())
+                }
+            })
+        } else {
+            Log.d(TAG, "No user is logged in")
         }
 
-        socket.on("message") { args ->
-            runOnUiThread {
-                val data = args[0] as JSONObject
-                try {
-                    val message = data.getString("message")
-                    val sender = data.getString("username")
-                    messageList.add("$sender: $message")
-                    messageAdapter.notifyDataSetChanged()
-                } catch (e: JSONException) {
-                    e.printStackTrace()
-                }
-            }
+        binding.ivChatPrevious.setOnClickListener {
+            finish()
         }
 
         binding.sendButton.setOnClickListener {
