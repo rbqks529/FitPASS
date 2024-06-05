@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentHomeBinding
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -16,6 +17,7 @@ import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class HomeFragment : Fragment() {
@@ -54,7 +56,18 @@ class HomeFragment : Fragment() {
             database = FirebaseDatabase.getInstance()
             mDatabaseRef = database.getReference("Post")
             mDatabaseRef.addListenerForSingleValueEvent(listener)
-            initRecyclerView()
+
+            withContext(Dispatchers.Main){
+                initRecyclerView()
+            }
+        }
+
+        binding.btnGet.setOnClickListener {
+            val postFragment = PostFragment()
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.main_frm, postFragment)
+                .addToBackStack(null)
+                .commit()
         }
 
         return binding.root
