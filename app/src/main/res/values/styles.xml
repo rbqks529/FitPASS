@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="BottomNavigationView" parent="@style/Widget.MaterialComponents.BottomNavigationView">
+        <item name="itemTextAppearanceActive">@style/BottomNavigationView.Active</item>
+        <item name="itemTextAppearanceInactive">@style/BottomNavigationView.InActive</item>
+    </style>
+
+    <style name="BottomNavigationView.Active" parent="TextAppearance.AppCompat.Caption">
+        <item name="android:textSize">11sp</item>
+        <item name="android:textColor">@color/black</item> <!-- 활성화된 메뉴 아이템 텍스트 색상 -->
+    </style>
+
+    <style name="BottomNavigationView.InActive" parent="TextAppearance.AppCompat.Caption">
+        <item name="android:textSize">11sp</item>
+        <item name="android:textColor">@color/black</item> <!-- 비활성화된 메뉴 아이템 텍스트 색상 -->
+    </style>
+
+    <style name="Theme._8weeks" parent="Theme.AppCompat.Light.NoActionBar"/>
+
+
+
+</resources>

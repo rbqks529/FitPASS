@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/homeFragment"
+        android:icon="@drawable/selector_home"
+        android:state_checked="true"
+        android:title="홈"
+        tools:ignore="MenuTitle"
+        app:showAsAction="always"
+        />
+
+    <item
+        android:id="@+id/commFragment"
+        android:icon="@drawable/selector_comm"
+        tools:ignore="MenuTitle"
+        android:title="커뮤니티"
+        app:showAsAction="always"
+        />
+
+    <item
+        android:id="@+id/nearFragment"
+        android:icon="@drawable/selector_near"
+        tools:ignore="MenuTitle"
+        android:title="근처 헬스장"
+        app:showAsAction="always"
+        />
+
+    <item
+        android:id="@+id/chatFragment"
+        android:icon="@drawable/selector_chat"
+        tools:ignore="MenuTitle"
+        android:title="채팅"
+        app:showAsAction="always"
+        />
+
+    <item
+        android:id="@+id/profileFragment"
+        android:icon="@drawable/selector_profile"
+        tools:ignore="MenuTitle"
+        android:title="프로필"
+        app:showAsAction="always"
+        />
+
+</menu>

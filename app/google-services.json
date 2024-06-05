@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1060549476895",
+    "project_id": "networkprogramming-8a3df",
+    "storage_bucket": "networkprogramming-8a3df.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1060549476895:android:c8b8fda9950d93c2220b2a",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgRQY04FLmYPOscaQvs7lYZpoXrrlXses"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
