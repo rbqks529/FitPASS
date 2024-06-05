@@ -10,11 +10,10 @@ import com.example.myapplication.databinding.ItemHomePostBinding
 
 class HomePostAdapter(val context: Context, val items : ArrayList<HomePostData>) : RecyclerView.Adapter<HomePostAdapter.ViewHolder>(){
 
-    private lateinit var itemClickerListener: OnItemClickListener
+    private lateinit var itemClickListener: OnItemClickListener
 
     interface OnItemClickListener{
-        fun onImageButtonClick(homePostData: HomePostData)
-        /*fun onHeartButtonClick(homePostData: HomePostData)*/
+        fun onItemClick(homePostData: HomePostData)
     }
 
     inner class ViewHolder(val binding: ItemHomePostBinding) : RecyclerView.ViewHolder(binding.root){
@@ -29,13 +28,17 @@ class HomePostAdapter(val context: Context, val items : ArrayList<HomePostData>)
             binding.tvHomePostPrice.text = item.post_price
             binding.tvHomePostRestTime.text = item.post_rest_time.toString()
             binding.tvHomePostOriginalPrice.text = item.post_original_price
+
+            binding.root.setOnClickListener {
+                itemClickListener.onItemClick(item)
+            }
         }
     }
 
-    //setter?
-    fun setOnItemClickListener(onItemClickListener: OnItemClickListener) {
-        itemClickerListener = onItemClickListener
+    fun setOnItemClickListener(listener: OnItemClickListener) {
+        itemClickListener = listener
     }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemHomePostBinding.inflate(LayoutInflater.from(parent.context), parent, false)

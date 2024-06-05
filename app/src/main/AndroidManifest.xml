@@ -16,19 +16,18 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".Chat.ChattingActivity"
+            android:exported="false"
+            android:label="@string/app_name"
+            android:theme="@style/Theme._8weeks" />
+        <activity
             android:name=".UserAccount"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme._8weeks">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:theme="@style/Theme._8weeks" />
         <activity
             android:name=".SignupActivity"
             android:exported="true"
@@ -38,8 +37,13 @@
             android:name=".LoginActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme._8weeks"/>
+            android:theme="@style/Theme._8weeks">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

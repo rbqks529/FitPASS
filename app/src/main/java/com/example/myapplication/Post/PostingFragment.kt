@@ -1,4 +1,4 @@
-package com.example.myapplication.Home
+package com.example.myapplication.Post
 
 import android.app.Activity
 import android.content.Intent
@@ -8,7 +8,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.myapplication.Home.HomePostData
 import com.example.myapplication.databinding.FragmentPostBinding
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
@@ -64,6 +66,7 @@ class PostingFragment : Fragment() {
         val price = binding.etPostPrice.text.toString().trim()
         val originalPrice = binding.etPostOriginalPrice.text.toString().trim()
         val postTime = System.currentTimeMillis() / 1000 // Get current time in seconds
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: "" // 현재 사용자 ID 가져오기
 
         if (selectedImageUri != null && placeName.isNotEmpty() && address.isNotEmpty() && price.isNotEmpty() && originalPrice.isNotEmpty()) {
             val postKey = databaseReference.push().key ?: return
@@ -81,7 +84,7 @@ class PostingFragment : Fragment() {
             }?.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val imageUrl = task.result.toString()
-                    val post = HomePostData(imageUrl, placeName, address, postTime.toLong(), restTime, price, originalPrice)
+                    val post = HomePostData(imageUrl, placeName, address, postTime.toLong(), restTime, price, originalPrice, currentUserId)
                     databaseReference.child(postKey).setValue(post)
                         .addOnSuccessListener {
                             // Clear input fields and reset the view

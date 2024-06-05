@@ -30,6 +30,7 @@ class SignupActivity : AppCompatActivity() {
         binding.btnSignup.setOnClickListener {
             var strId = binding.etId.text.toString()
             var strPwd = binding.etPassword.text.toString()
+            var strNickname = binding.etNickName.text.toString()
 
             mFirebaseAuth.createUserWithEmailAndPassword(strId, strPwd).addOnCompleteListener(this, OnCompleteListener {
                 if(it.isSuccessful){
@@ -38,6 +39,7 @@ class SignupActivity : AppCompatActivity() {
                     account.idToken = firebaseUser!!.uid
                     account.emailId = firebaseUser!!.email.toString()
                     account.password = strPwd
+                    account.nickName = strNickname
 
                     mDatabaseRef.child("UserAccount").child(firebaseUser.uid).setValue(account)
                     Toast.makeText(this, "회원가입 성공", Toast.LENGTH_SHORT).show()
