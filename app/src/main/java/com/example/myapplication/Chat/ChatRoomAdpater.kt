@@ -32,7 +32,7 @@ class ChatRoomAdapter(private val context: Context, private val chatRooms: List<
         val lastMessageTextView: TextView = view.findViewById(R.id.lastMessageTextView)
         val lastMessageTimeTextView: TextView = view.findViewById(R.id.lastMessageTimeTextView)
 
-        roomNameTextView.text = chatRoom?.nickName
+        roomNameTextView.text = chatRoom?.roomId
         lastMessageTextView.text = chatRoom?.lastMessage
         lastMessageTimeTextView.text = formatTimestamp(chatRoom?.lastMessageTime ?: 0)
 
