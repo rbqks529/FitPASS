@@ -3,6 +3,7 @@ package com.example.myapplication.Chat
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.databinding.ActivityChattingBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -55,6 +56,7 @@ class ChattingActivity : AppCompatActivity() {
 
                     messageAdapter = MessageAdapter(this@ChattingActivity, messageList, username)
                     binding.messageRecyclerView.adapter = messageAdapter
+                    binding.messageRecyclerView.layoutManager = LinearLayoutManager(this@ChattingActivity)
 
                     try {
                         socket = IO.socket("http://218.38.190.81:10001")
@@ -90,6 +92,7 @@ class ChattingActivity : AppCompatActivity() {
                                     messageList.add(Message(message, sender))
                                 }
                                 messageAdapter.notifyDataSetChanged()
+                                binding.messageRecyclerView.scrollToPosition(messageList.size - 1)
                             } catch (e: JSONException) {
                                 e.printStackTrace()
                             }
@@ -104,6 +107,7 @@ class ChattingActivity : AppCompatActivity() {
                                 val sender = data.getString("username")
                                 messageList.add(Message(message, sender))
                                 messageAdapter.notifyDataSetChanged()
+                                binding.messageRecyclerView.scrollToPosition(messageList.size - 1)
                             } catch (e: JSONException) {
                                 e.printStackTrace()
                             }
