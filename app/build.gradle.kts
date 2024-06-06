@@ -58,6 +58,6 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     implementation("io.socket:socket.io-client:2.1.0")
-    annotationProcessor("com.github.bumptech.glide:compiler:4.14.2")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
     implementation("com.github.bumptech.glide:glide:4.16.0")
 }

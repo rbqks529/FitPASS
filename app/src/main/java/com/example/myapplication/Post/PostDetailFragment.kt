@@ -50,7 +50,7 @@ class PostDetailFragment : Fragment() {
         binding.ivChattingButton.setOnClickListener {
             val intent = Intent(requireContext(), ChattingActivity::class.java)
             intent.putExtra("token", token)
-            intent.putExtra("USERNAME", binding.tvPostDetailUsername.text.toString())
+            intent.putExtra("username", binding.tvPostDetailUsername.text.toString())
             startActivity(intent)
         }
 

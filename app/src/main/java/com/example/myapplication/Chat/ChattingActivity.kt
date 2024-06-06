@@ -1,8 +1,8 @@
+// ChattingActivity.kt
 package com.example.myapplication.Chat
 
 import android.os.Bundle
 import android.util.Log
-import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import com.example.myapplication.databinding.ActivityChattingBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -14,33 +14,31 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.net.URISyntaxException
 
+data class Message(val content: String, val sender: String)
+
 class ChattingActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityChattingBinding
     private lateinit var socket: Socket
-    private lateinit var messageAdapter: ArrayAdapter<String>
-    private val messageList = mutableListOf<String>()
+    private val messageList = mutableListOf<Message>()
+    private lateinit var messageAdapter: MessageAdapter
     private lateinit var token: String
     private lateinit var username: String
+    private lateinit var postname: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityChattingBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        messageAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, messageList)
-        binding.messageListView.adapter = messageAdapter
-
         token = intent.getStringExtra("token") ?: ""
+        postname = intent.getStringExtra("username") ?: ""
 
-        // Firebase Auth instance
         val auth = FirebaseAuth.getInstance()
         val currentUser = auth.currentUser
 
         if (currentUser != null) {
             val uid = currentUser.uid
-
-            // Firebase Database reference
             val database = FirebaseDatabase.getInstance().getReference("UserAccount").child(uid)
 
             database.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -48,7 +46,9 @@ class ChattingActivity : AppCompatActivity() {
                     username = dataSnapshot.child("nickName").value.toString()
                     Log.d(TAG, "username: $username")
 
-                    // Connect to socket after getting username
+                    messageAdapter = MessageAdapter(this@ChattingActivity, messageList, username)
+                    binding.messageRecyclerView.adapter = messageAdapter
+
                     try {
                         socket = IO.socket("http://218.38.190.81:10001")
                         socket.connect()
@@ -70,7 +70,7 @@ class ChattingActivity : AppCompatActivity() {
                                     val messageData = data.getJSONObject(i)
                                     val message = messageData.getString("message")
                                     val sender = messageData.getString("username")
-                                    messageList.add("$sender: $message")
+                                    messageList.add(Message(message, sender))
                                 }
                                 messageAdapter.notifyDataSetChanged()
                             } catch (e: JSONException) {
@@ -85,7 +85,7 @@ class ChattingActivity : AppCompatActivity() {
                             try {
                                 val message = data.getString("message")
                                 val sender = data.getString("username")
-                                messageList.add("$sender: $message")
+                                messageList.add(Message(message, sender))
                                 messageAdapter.notifyDataSetChanged()
                             } catch (e: JSONException) {
                                 e.printStackTrace()
@@ -114,10 +114,11 @@ class ChattingActivity : AppCompatActivity() {
                     messageObject.put("message", message)
                     messageObject.put("username", username)
                     socket.emit("message", messageObject)
+
+                    binding.messageEditText.setText("")
                 } catch (e: JSONException) {
                     e.printStackTrace()
                 }
-                binding.messageEditText.setText("")
             }
         }
     }
