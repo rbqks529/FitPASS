@@ -52,11 +52,14 @@ class ChatFragment : Fragment() {
             }
         })
 
+        // ChatFragment
         chatRoomAdapter.setOnItemClickListener(object : ChatRoomAdapter.OnItemClickListener {
             override fun onItemClick(chatRoom: ChatRoom) {
                 val intent = Intent(requireContext(), ChattingActivity::class.java)
                 intent.putExtra("posttoken", chatRoom.roomId)
                 intent.putExtra("postname", chatRoom.postName)
+                intent.putExtra("placename", chatRoom.placeName)
+                intent.putExtra("price", chatRoom.price)
                 startActivity(intent)
             }
         })
@@ -71,7 +74,7 @@ class ChatFragment : Fragment() {
 
 data class ChatRoom(
     val roomId: String,
-    val postName: String,
-    val placeName: String,
-    val price: String
+    val postName: String?,
+    val placeName: String?,
+    val price: String?
 )
