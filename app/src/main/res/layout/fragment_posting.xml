@@ -7,7 +7,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="16dp">
 
         <ImageView
             android:id="@+id/iv_post_image"
@@ -21,67 +22,96 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="이미지 선택"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:background="@drawable/gradient_button_background"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_post_image"
-            android:layout_marginTop="8dp" />
-
-        <EditText
-            android:id="@+id/et_post_place_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="장소명"
-            app:layout_constraintTop_toBottomOf="@+id/btn_select_image"
             android:layout_marginTop="16dp" />
 
-        <EditText
-            android:id="@+id/et_post_address"
+        <LinearLayout
+            android:id="@+id/ll_inputs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="주소"
-            app:layout_constraintTop_toBottomOf="@id/et_post_place_name"
-            android:layout_marginTop="8dp" />
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@+id/btn_select_image"
+            android:layout_marginTop="16dp">
 
-        <EditText
-            android:id="@+id/et_post_rest_time"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="남은 시간(단위 : 일)"
-            android:inputType="number"
-            app:layout_constraintTop_toBottomOf="@+id/et_post_address"
-            android:layout_marginTop="8dp" />
+            <EditText
+                android:id="@+id/et_post_place_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="장소명"
+                android:textColorHint="#757575"
+                android:background="@drawable/rounded_edit_text"
+                android:padding="12dp" />
 
-        <EditText
-            android:id="@+id/et_post_price"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="가격"
-            app:layout_constraintTop_toBottomOf="@id/et_post_rest_time"
-            android:layout_marginTop="8dp" />
+            <EditText
+                android:id="@+id/et_post_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="주소"
+                android:textColorHint="#757575"
+                android:background="@drawable/rounded_edit_text"
+                android:padding="12dp"
+                android:layout_marginTop="8dp" />
 
-        <EditText
-            android:id="@+id/et_post_original_price"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="원래 가격"
-            app:layout_constraintTop_toBottomOf="@id/et_post_price"
-            android:layout_marginTop="8dp" />
+            <EditText
+                android:id="@+id/et_post_rest_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="남은 시간(단위 : 일)"
+                android:textColorHint="#757575"
+                android:background="@drawable/rounded_edit_text"
+                android:padding="12dp"
+                android:inputType="number"
+                android:layout_marginTop="8dp" />
 
-        <EditText
-            android:id="@+id/et_post_content"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:gravity="start|top"
-            android:hint="게시글 내용"
-            app:layout_constraintTop_toBottomOf="@id/et_post_original_price"
-            android:layout_marginTop="8dp" />
+            <EditText
+                android:id="@+id/et_post_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="가격"
+                android:textColorHint="#757575"
+                android:background="@drawable/rounded_edit_text"
+                android:padding="12dp"
+                android:layout_marginTop="8dp" />
+
+            <EditText
+                android:id="@+id/et_post_original_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="원래 가격"
+                android:textColorHint="#757575"
+                android:background="@drawable/rounded_edit_text"
+                android:padding="12dp"
+                android:layout_marginTop="8dp" />
+
+            <EditText
+                android:id="@+id/et_post_content"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:gravity="start|top"
+                android:hint="게시글 내용"
+                android:textColorHint="#757575"
+                android:background="@drawable/rounded_edit_text"
+                android:padding="12dp"
+                android:layout_marginTop="8dp" />
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/btn_post"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="게시"
-            app:layout_constraintTop_toBottomOf="@id/et_post_content"
-            android:layout_marginTop="16dp" />
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:background="@drawable/gradient_button_background"
+            app:layout_constraintTop_toBottomOf="@id/ll_inputs"
+            android:layout_marginTop="24dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -101,8 +101,10 @@
 
         <Button
             android:id="@+id/sendButton"
+            android:textColor="@android:color/white"
+            android:background="@drawable/gradient_button_background"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:text="전송" />
     </LinearLayout>
 

@@ -9,6 +9,8 @@
         android:id="@+id/btn_open_map"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:background="@drawable/gradient_button_background"
         android:text="Open Map"
         android:layout_centerInParent="true"/>
 </RelativeLayout>
