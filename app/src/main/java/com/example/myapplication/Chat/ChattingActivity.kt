@@ -24,6 +24,7 @@ class ChattingActivity : AppCompatActivity() {
     private lateinit var messageAdapter: MessageAdapter
     private lateinit var token: String
     private lateinit var username: String
+    private lateinit var postname: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +32,7 @@ class ChattingActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         token = intent.getStringExtra("token") ?: ""
-        username = intent.getStringExtra("username") ?: ""
+        postname = intent.getStringExtra("username") ?: ""
 
         val auth = FirebaseAuth.getInstance()
         val currentUser = auth.currentUser
@@ -46,7 +47,7 @@ class ChattingActivity : AppCompatActivity() {
                     Log.d(TAG, "username: $username")
 
                     messageAdapter = MessageAdapter(this@ChattingActivity, messageList, username)
-                    binding.messageListView.adapter = messageAdapter
+                    binding.messageRecyclerView.adapter = messageAdapter
 
                     try {
                         socket = IO.socket("http://218.38.190.81:10001")
