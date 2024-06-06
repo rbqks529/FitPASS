@@ -45,7 +45,7 @@
             android:id="@+id/et_post_rest_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="남은 시간"
+            android:hint="남은 시간(단위 : 일)"
             android:inputType="number"
             app:layout_constraintTop_toBottomOf="@+id/et_post_address"
             android:layout_marginTop="8dp" />

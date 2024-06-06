@@ -15,7 +15,6 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 
-
 class PostingFragment : Fragment() {
 
     private lateinit var binding: FragmentPostingBinding
@@ -70,10 +69,11 @@ class PostingFragment : Fragment() {
         val postContent = binding.etPostContent.text.toString().trim()
 
         if (selectedImageUri != null && placeName.isNotEmpty() && address.isNotEmpty() && price.isNotEmpty() && originalPrice.isNotEmpty()) {
-            val postKey = databaseReference.push().key ?: return
+            // 고유한 키(토큰) 생성
+            val postToken = databaseReference.push().key ?: return
 
             val uploadTask = selectedImageUri?.let { uri ->
-                val storageReference = FirebaseStorage.getInstance().reference.child("post_images/$postKey")
+                val storageReference = FirebaseStorage.getInstance().reference.child("post_images/$postToken")
                 storageReference.putFile(uri)
             }
 
@@ -85,8 +85,9 @@ class PostingFragment : Fragment() {
             }?.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val imageUrl = task.result.toString()
-                    val post = HomePostData(imageUrl, placeName, address, postTime.toLong(), restTime, price, originalPrice, currentUserId, postContent)
-                    databaseReference.child(postKey).setValue(post)
+                    // 생성한 토큰으로 데이터 저장
+                    val post = HomePostData(imageUrl, placeName, address, postTime.toLong(), restTime, price, originalPrice, currentUserId, postContent, postToken)
+                    databaseReference.child(postToken).setValue(post)
                         .addOnSuccessListener {
                             // Clear input fields and reset the view
                             binding.etPostPlaceName.setText("")

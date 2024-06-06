@@ -12,6 +12,7 @@ data class HomePostData(
     val post_price: String = "",
     val post_original_price: String = "",
     val userId: String = "",
-    val post_content: String = "" // 게시글 내용 필드 추가
+    val post_content: String = "",
+    val postToken: String = "" // 토큰 필드 추가
 ) : Serializable
 

@@ -23,7 +23,8 @@ class PostDetailFragment : Fragment() {
     private lateinit var post: HomePostData
     private lateinit var database: FirebaseDatabase
     private lateinit var userReference: DatabaseReference
-    private var token: String? = null
+    private var Usertoken: String? = null
+    private var Posttoken: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,7 +33,8 @@ class PostDetailFragment : Fragment() {
         binding = FragmentPostDetailBinding.inflate(inflater, container, false)
 
         post = arguments?.getSerializable("post") as HomePostData
-        token = post.userId
+        Usertoken = post.userId
+        Posttoken = post.postToken
 
         database = FirebaseDatabase.getInstance()
         userReference = database.reference.child("UserAccount")
@@ -49,8 +51,9 @@ class PostDetailFragment : Fragment() {
 
         binding.ivChattingButton.setOnClickListener {
             val intent = Intent(requireContext(), ChattingActivity::class.java)
-            intent.putExtra("token", token)
-            intent.putExtra("username", binding.tvPostDetailUsername.text.toString())
+            intent.putExtra("usertoken", Usertoken)
+            intent.putExtra("posttoken", Posttoken)
+            intent.putExtra("postname", binding.tvPostDetailUsername.text.toString())
             startActivity(intent)
         }
 
@@ -70,7 +73,7 @@ class PostDetailFragment : Fragment() {
     }
 
     private fun loadUserDetails() {
-        token?.let { token ->
+        Usertoken?.let { token ->
             userReference.child(token).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val userData = snapshot.getValue(object : GenericTypeIndicator<Map<String, Any>>() {})

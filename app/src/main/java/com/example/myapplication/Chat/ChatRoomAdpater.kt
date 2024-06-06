@@ -1,4 +1,3 @@
-// ChatRoomAdapter.kt
 package com.example.myapplication.Chat
 
 import android.content.Context
@@ -8,9 +7,6 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import com.example.myapplication.R
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 class ChatRoomAdapter(private val context: Context, private val chatRooms: List<ChatRoom>) :
     ArrayAdapter<ChatRoom>(context, 0, chatRooms) {
@@ -29,15 +25,11 @@ class ChatRoomAdapter(private val context: Context, private val chatRooms: List<
         }
 
         val roomNameTextView: TextView = view!!.findViewById(R.id.roomNameTextView)
-        val lastMessageTextView: TextView = view.findViewById(R.id.lastMessageTextView)
-        val lastMessageTimeTextView: TextView = view.findViewById(R.id.lastMessageTimeTextView)
 
-        roomNameTextView.text = chatRoom?.roomId
-        lastMessageTextView.text = chatRoom?.lastMessage
-        lastMessageTimeTextView.text = formatTimestamp(chatRoom?.lastMessageTime ?: 0)
+        roomNameTextView.text = chatRoom!!.postName
 
         view.setOnClickListener {
-            chatRoom?.let { itemClickListener.onItemClick(it) }
+            chatRoom.let { itemClickListener.onItemClick(it) }
         }
 
         return view
@@ -45,10 +37,5 @@ class ChatRoomAdapter(private val context: Context, private val chatRooms: List<
 
     fun setOnItemClickListener(listener: OnItemClickListener) {
         itemClickListener = listener
-    }
-
-    private fun formatTimestamp(timestamp: Long): String {
-        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
-        return sdf.format(Date(timestamp))
     }
 }

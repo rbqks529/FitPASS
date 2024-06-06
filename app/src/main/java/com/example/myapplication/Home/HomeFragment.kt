@@ -21,12 +21,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-
 class HomeFragment : Fragment() {
 
     lateinit var binding: FragmentHomeBinding
-    private var PostitemList : ArrayList<HomePostData> = arrayListOf()
-    private var HomePostAdapter : HomePostAdapter ?= null
+    private var PostitemList: ArrayList<HomePostData> = arrayListOf()
+    private var HomePostAdapter: HomePostAdapter? = null
     private lateinit var mDatabaseRef: DatabaseReference
     private lateinit var database: FirebaseDatabase
 
@@ -36,6 +35,8 @@ class HomeFragment : Fragment() {
             for (snapshot: DataSnapshot in datasnapshot.children.reversed()) { // 내림차순 순회
                 val post = snapshot.getValue(HomePostData::class.java)
                 post?.let {
+                    // 토큰 값 사용
+                    val postToken = it.postToken
                     PostitemList.add(it)
                 }
             }
@@ -46,13 +47,14 @@ class HomeFragment : Fragment() {
             Log.e("HomeFragment", "db에러")
         }
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
-        binding.rvPost.setHasFixedSize(true);
+        binding.rvPost.setHasFixedSize(true)
 
         CoroutineScope(Dispatchers.IO).launch {
             database = FirebaseDatabase.getInstance()
@@ -76,7 +78,6 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
-
     private fun initRecyclerView() {
         HomePostAdapter = HomePostAdapter(requireContext(), PostitemList)
         binding.rvPost.adapter = HomePostAdapter
@@ -90,8 +91,7 @@ class HomeFragment : Fragment() {
                 }
                 postDetailFragment.arguments = bundle
                 requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.main_frm, postDetailFragment)
-                    .addToBackStack(null)
+                    .replace(R.id.main_frm, postDetailFragment).addToBackStack(null)
                     .commit()
             }
         })

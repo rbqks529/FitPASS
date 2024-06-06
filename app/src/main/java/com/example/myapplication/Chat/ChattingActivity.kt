@@ -22,7 +22,8 @@ class ChattingActivity : AppCompatActivity() {
     private lateinit var socket: Socket
     private val messageList = mutableListOf<Message>()
     private lateinit var messageAdapter: MessageAdapter
-    private lateinit var token: String
+    private lateinit var Posttoken: String
+    private lateinit var Usertoken: String
     private lateinit var username: String
     private lateinit var postname: String
 
@@ -31,8 +32,9 @@ class ChattingActivity : AppCompatActivity() {
         binding = ActivityChattingBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        token = intent.getStringExtra("token") ?: ""
-        postname = intent.getStringExtra("username") ?: ""
+        Posttoken = intent.getStringExtra("posttoken") ?: ""
+        /*Usertoken = intent.getStringExtra("usertoken") ?: ""*/
+        postname = intent.getStringExtra("postname") ?: ""
 
         val auth = FirebaseAuth.getInstance()
         val currentUser = auth.currentUser
@@ -52,7 +54,7 @@ class ChattingActivity : AppCompatActivity() {
                     try {
                         socket = IO.socket("http://218.38.190.81:10001")
                         socket.connect()
-                        socket.emit("joinRoom", JSONObject().put("roomId", token).put("username", username))
+                        socket.emit("joinRoom", JSONObject().put("roomId", Posttoken).put("username", username))
                     } catch (e: URISyntaxException) {
                         e.printStackTrace()
                     } catch (e: JSONException) {
