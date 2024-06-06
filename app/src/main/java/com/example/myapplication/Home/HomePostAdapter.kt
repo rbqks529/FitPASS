@@ -59,13 +59,15 @@ class HomePostAdapter(val context: Context, val items : ArrayList<HomePostData>)
         val hours = minutes / 60
         val days = hours / 24
         val weeks = days / 7
+        val months = days / 30 // 달 단위 계산 추가
 
         return when {
             days == 0L && hours == 0L && minutes == 0L -> "몇 초 전"
             days == 0L && hours == 0L -> "${minutes}분 전"
             days == 0L -> "${hours}시간 전"
             days < 7 -> "${days}일 전"
-            else -> "${weeks}주 전"
+            days < 30 -> "${weeks}주 전" // 한 달 미만일 때는 주 단위로 표시
+            else -> "${months}달 전" // 한 달 이상일 때는 달 단위로 표시
         }
     }
 

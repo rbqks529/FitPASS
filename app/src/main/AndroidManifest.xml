@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" >
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -14,7 +16,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication"
         android:usesCleartextTraffic="true"
-        tools:targetApi="31" >
+        tools:targetApi="31">
+
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBZc8c5G0sDHsMLkG8-GpKSOnv97DCb_xA" />
+
+        <activity
+            android:name=".MapsActivity"
+            android:exported="false"
+            android:label="@string/app_name"
+            android:theme="@style/Theme._8weeks" />
+
         <activity
             android:name=".Chat.ChattingActivity"
             android:exported="false"
@@ -22,7 +36,9 @@
             android:theme="@style/Theme._8weeks" />
         <activity
             android:name=".Login.UserAccount"
-            android:exported="false" />
+            android:exported="false"
+            android:label="@string/app_name"
+            android:theme="@style/Theme._8weeks" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -37,7 +53,7 @@
             android:name=".Login.LoginActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme._8weeks" >
+            android:theme="@style/Theme._8weeks">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
