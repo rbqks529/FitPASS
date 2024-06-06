@@ -54,6 +54,8 @@ class PostDetailFragment : Fragment() {
             intent.putExtra("usertoken", Usertoken)
             intent.putExtra("posttoken", Posttoken)
             intent.putExtra("postname", binding.tvPostDetailUsername.text.toString())
+            intent.putExtra("placename", binding.tvPostDetailPlaceName.text.toString())
+            intent.putExtra("price", binding.tvPostDetailPrice.text.toString())
             startActivity(intent)
         }
 

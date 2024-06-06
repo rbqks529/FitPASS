@@ -1,4 +1,3 @@
-// ChattingActivity.kt
 package com.example.myapplication.Chat
 
 import android.os.Bundle
@@ -36,6 +35,17 @@ class ChattingActivity : AppCompatActivity() {
         /*Usertoken = intent.getStringExtra("usertoken") ?: ""*/
         postname = intent.getStringExtra("postname") ?: ""
 
+        // PostDetailFragment에서 전달한 데이터 가져오기
+        val postusername = intent.getStringExtra("postname") ?: ""
+        val placeName = intent.getStringExtra("placename") ?: ""
+        val price = intent.getStringExtra("price") ?: ""
+
+        // TextView에 데이터 설정
+        binding.tvPostAuther.text = postusername
+        binding.tvPostTitle.text = placeName
+        binding.tvPostPrice.text = price
+
+
         val auth = FirebaseAuth.getInstance()
         val currentUser = auth.currentUser
 
@@ -55,6 +65,11 @@ class ChattingActivity : AppCompatActivity() {
                         socket = IO.socket("http://218.38.190.81:10001")
                         socket.connect()
                         socket.emit("joinRoom", JSONObject().put("roomId", Posttoken).put("username", username))
+
+                        // ChatRooms 노드에 채팅방 정보 추가
+                        val currentUserId = auth.currentUser?.uid ?: ""
+                        val chatRoomRef = FirebaseDatabase.getInstance().getReference("ChatRooms/$currentUserId/$Posttoken")
+                        chatRoomRef.setValue(mapOf("postName" to postname))
                     } catch (e: URISyntaxException) {
                         e.printStackTrace()
                     } catch (e: JSONException) {
