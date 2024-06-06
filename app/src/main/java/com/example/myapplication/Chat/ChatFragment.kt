@@ -29,6 +29,7 @@ class ChatFragment : Fragment() {
         val currentUser = FirebaseAuth.getInstance().currentUser
         val currentUserId = currentUser?.uid ?: ""
 
+
         chatRoomAdapter = ChatRoomAdapter(requireContext(), chatRoomList)
         binding.chatRoomListView.adapter = chatRoomAdapter
 
