@@ -22,9 +22,10 @@ class ChattingActivity : AppCompatActivity() {
     private val messageList = mutableListOf<Message>()
     private lateinit var messageAdapter: MessageAdapter
     private lateinit var Posttoken: String
-    private lateinit var Usertoken: String
     private lateinit var username: String
     private lateinit var postname: String
+    private lateinit var placeName: String
+    private lateinit var price: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,19 +33,13 @@ class ChattingActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         Posttoken = intent.getStringExtra("posttoken") ?: ""
-        /*Usertoken = intent.getStringExtra("usertoken") ?: ""*/
         postname = intent.getStringExtra("postname") ?: ""
+        placeName = intent.getStringExtra("placename") ?: ""
+        price = intent.getStringExtra("price") ?: ""
 
-        // PostDetailFragment에서 전달한 데이터 가져오기
-        val postusername = intent.getStringExtra("postname") ?: ""
-        val placeName = intent.getStringExtra("placename") ?: ""
-        val price = intent.getStringExtra("price") ?: ""
-
-        // TextView에 데이터 설정
-        binding.tvPostAuther.text = postusername
+        binding.tvPostAuther.text = postname
         binding.tvPostTitle.text = placeName
         binding.tvPostPrice.text = price
-
 
         val auth = FirebaseAuth.getInstance()
         val currentUser = auth.currentUser
@@ -68,8 +63,13 @@ class ChattingActivity : AppCompatActivity() {
 
                         // ChatRooms 노드에 채팅방 정보 추가
                         val currentUserId = auth.currentUser?.uid ?: ""
+                        val chatRoomData = mapOf(
+                            "postName" to postname,
+                            "placeName" to placeName,
+                            "price" to price
+                        )
                         val chatRoomRef = FirebaseDatabase.getInstance().getReference("ChatRooms/$currentUserId/$Posttoken")
-                        chatRoomRef.setValue(mapOf("postName" to postname))
+                        chatRoomRef.setValue(chatRoomData)
                     } catch (e: URISyntaxException) {
                         e.printStackTrace()
                     } catch (e: JSONException) {

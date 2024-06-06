@@ -17,6 +17,8 @@ class ChatRoomAdapter(private val context: Context, private val chatRooms: List<
         fun onItemClick(chatRoom: ChatRoom)
     }
 
+
+
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val chatRoom = getItem(position)
         var view = convertView
@@ -25,8 +27,12 @@ class ChatRoomAdapter(private val context: Context, private val chatRooms: List<
         }
 
         val roomNameTextView: TextView = view!!.findViewById(R.id.roomNameTextView)
+        val placeNameTextView: TextView = view.findViewById(R.id.placeNameTextView)
+        val priceTextView: TextView = view.findViewById(R.id.priceTextView)
 
         roomNameTextView.text = chatRoom!!.postName
+        placeNameTextView.text = chatRoom.placeName
+        priceTextView.text = chatRoom.price
 
         view.setOnClickListener {
             chatRoom.let { itemClickListener.onItemClick(it) }

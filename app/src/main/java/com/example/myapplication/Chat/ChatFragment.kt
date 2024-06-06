@@ -39,7 +39,9 @@ class ChatFragment : Fragment() {
                 for (roomSnapshot in snapshot.children) {
                     val roomId = roomSnapshot.key ?: ""
                     val postName = roomSnapshot.child("postName").value?.toString() ?: ""
-                    val chatRoom = ChatRoom(roomId, postName)
+                    val placeName = roomSnapshot.child("placeName").value?.toString() ?: ""
+                    val price = roomSnapshot.child("price").value?.toString() ?: ""
+                    val chatRoom = ChatRoom(roomId, postName, placeName, price)
                     chatRoomList.add(chatRoom)
                 }
                 chatRoomAdapter.notifyDataSetChanged()
@@ -69,5 +71,7 @@ class ChatFragment : Fragment() {
 
 data class ChatRoom(
     val roomId: String,
-    val postName: String
+    val postName: String,
+    val placeName: String,
+    val price: String
 )
